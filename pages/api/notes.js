@@ -1,7 +1,7 @@
 const notes = [
   {
     id: 1,
-    title: "XZEDCGWEESEFAFADCQB",
+    title: "AFUC QD PYWAB BYCDY",
     description: "Bqvg fbyhgn qrovgvf ",
     image:
       "https://rosyid.sgp1.digitaloceanspaces.com/encrypted_file/1669190087627-doc_5_page-0001.jpg.enc",
