@@ -1,10 +1,19 @@
-const notes = [];
+const notes = [
+  {
+    id: 1,
+    title: "XZEDCGWEESEFAFADCQB",
+    description: "Bqvg fbyhgn qrovgvf ",
+    image:
+      "https://rosyid.sgp1.digitaloceanspaces.com/encrypted_file/1669190087627-doc_5_page-0001.jpg.enc",
+  },
+];
 
 import formidable from "formidable";
 import fs from "fs";
 import { decryptFile, saveFile } from "../../utils/cryptoAES";
 import { rot13 } from "../../utils/cryptoRot13";
 import { vigenereDecrypt, vigenereEncrypt } from "../../utils/cryptoVigenere";
+import { readFileS3 } from "../../utils/uploadS3";
 
 export const config = {
   api: {
@@ -41,13 +50,19 @@ export default async function handler(req, res) {
   if (req.method === "GET") {
     if (req.query.id) {
       const note = notes.find((note) => note.id === parseInt(req.query.id));
+      if (!note) {
+        return res
+          .status(404)
+          .json({ status: "error", message: "Note not found" });
+      }
       const key = req.query.key;
-      const encryptedHex = fs.readFileSync(
-        `./public/${note.image.replace("/", "")}`,
-        "utf8"
-      );
+      const buffer = await readFileS3(note.image.split("/").pop());
 
-      const base64 = await decryptFile(encryptedHex, key);
+      const base64 = await decryptFile(buffer, key);
+
+      if (!base64) {
+        return res.status(400).json({ status: "error", message: "Wrong key" });
+      }
 
       const noteDecrypted = {
         ...note,

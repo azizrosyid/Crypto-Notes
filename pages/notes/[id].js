@@ -1,4 +1,4 @@
-import { Modal } from "flowbite-react";
+import { Button, Modal } from "flowbite-react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import MainNavbar from "../../components/Navbar";
@@ -16,9 +16,14 @@ export default function Notes() {
   useEffect(() => {
     const getNote = async (id, key) => {
       const response = await fetch(`/api/notes?id=${id}&key=${key}`);
-      const responseJson = await response.json();
-      const { data } = responseJson;
-      setNote(data);
+      if (response.ok) {
+        const responseJson = await response.json();
+        const { data } = responseJson;
+        setNote(data);
+      } else {
+        const { message } = await response.json();
+        setError({ message });
+      }
     };
 
     if (id && key) {
@@ -29,8 +34,16 @@ export default function Notes() {
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center h-screen">
-        <h1 className="text-2xl font-bold">Error</h1>
-        <p className="text-gray-600">Terjadi kesalahan</p>
+        <h1 className="text-5xl font-bold mb-3">Error</h1>
+        <p className="text-gray-600 text-3xl">{error.message}</p>
+        <Button
+          className="mt-5"
+          onClick={() => {
+            router.push("/");
+          }}
+        >
+          Back to Home
+        </Button>
       </div>
     );
   }
