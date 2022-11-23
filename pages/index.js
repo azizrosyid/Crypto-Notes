@@ -24,7 +24,7 @@ export default function Home() {
 
   useEffect(() => {
     fetchNotes();
-  }, []);
+  }, [fetchNotes]);
 
   return (
     <div>

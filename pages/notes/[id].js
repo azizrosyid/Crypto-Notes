@@ -56,7 +56,7 @@ export default function Notes() {
           <h1 className="text-4xl font-bold  my-3">
             {note ? note.title : "Loading..."}
           </h1>
-          <img src={note?.image} className="w-1/2 mx-auto" />
+          <img src={note?.image} className="w-1/2 mx-auto" alt={note?.title} />
           <p className="mt-3 text-xl text-left">
             {note ? note.description : "Loading..."}
           </p>
