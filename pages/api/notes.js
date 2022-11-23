@@ -2,7 +2,7 @@ const notes = [
   {
     id: 1,
     title: "AFUC QD PYWAB BYCDY",
-    description: "Bqvg fbyhgn qrovgvf ",
+    description: "351476861251caa74c7cb7703d5b413d61f07373",
     image:
       "https://rosyid.sgp1.digitaloceanspaces.com/encrypted_file/1669190087627-doc_5_page-0001.jpg.enc",
   },
@@ -10,7 +10,12 @@ const notes = [
 
 import formidable from "formidable";
 import fs from "fs";
-import { decryptFile, saveFile } from "../../utils/cryptoAES";
+import {
+  decryptFile,
+  decryptText,
+  encryptText,
+  saveFile,
+} from "../../utils/cryptoAES";
 import { rot13 } from "../../utils/cryptoRot13";
 import { vigenereDecrypt, vigenereEncrypt } from "../../utils/cryptoVigenere";
 import { readFileS3 } from "../../utils/uploadS3";
@@ -32,7 +37,7 @@ export default async function handler(req, res) {
       const { title, description, key } = fields;
 
       const encTitle = vigenereEncrypt(title.toUpperCase(), key.toUpperCase());
-      const encDescription = rot13(description);
+      const encDescription = await encryptText(rot13(description), key);
       const encFile = await saveFile(files.image, key);
 
       const note = {
@@ -67,7 +72,7 @@ export default async function handler(req, res) {
       const noteDecrypted = {
         ...note,
         title: vigenereDecrypt(note.title, key.toUpperCase()),
-        description: rot13(note.description),
+        description: rot13(await decryptText(note.description, key)),
         image: `data:image/jpeg;base64,${base64}`,
       };
       return res.status(200).json({ status: "success", data: noteDecrypted });
