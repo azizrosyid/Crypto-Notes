@@ -17,7 +17,7 @@ export default function NoteCard({ note }) {
         <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
           {note.title}
         </h5>
-        <p className="font-normal text-gray-700 dark:text-gray-400 text-left word-break-all">
+        <p className="font-normal text-gray-700 dark:text-gray-400 text-left break-words">
           {note.description}
         </p>
       </Card>
